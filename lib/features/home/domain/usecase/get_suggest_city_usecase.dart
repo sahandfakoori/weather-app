@@ -1,0 +1,1 @@
+// class GetSuggestCityUsecase implements UseCas{}
