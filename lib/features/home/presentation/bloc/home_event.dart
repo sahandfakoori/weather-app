@@ -18,3 +18,8 @@ class SaveCityEvent extends HomeEvent{
 
   SaveCityEvent(this.city);
 }
+class LoadCityWeatherEvent extends HomeEvent {
+
+  LoadCityWeatherEvent();
+}
+

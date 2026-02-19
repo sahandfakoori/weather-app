@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/core/utils/location_service.dart';
 import 'package:weather_app/core/utils/use_current_location.dart';
 import 'package:weather_app/features/home/data/models/suggest_city_model.dart';
 import 'package:weather_app/features/home/domain/repository/home_repository.dart';
+import 'package:weather_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:weather_app/features/home/presentation/bloc/home_event.dart';
+import 'package:weather_app/features/home/presentation/pages/home_screen.dart';
 import 'package:weather_app/locator.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -34,9 +38,10 @@ class _SearchScreenState extends State<SearchScreen> {
   Future<void> initApp() async {
     final prefs = await SharedPreferences.getInstance();
     if (!mounted) return;
-    final status = prefs.getString('currentLocation');
+    final status = prefs.getString('currentLocation'); // agree or disagree
+    final city = prefs.getString('city');
 
-    if (status == null || status == 'disagree') {
+    if ((status == null || status == 'disagree') && city == null) {
       await useCurrentLocation(context);
     }
     if (!mounted) return;
@@ -73,13 +78,16 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(
           children: [
+            // back arrow
             GestureDetector(
               onTap: () async {
                 final prefs = await SharedPreferences.getInstance();
                 final status = prefs.getString('currentLocation');
-                if (status == 'disagree' || status == null) {
+                final city = prefs.getString('city');
+                if ((status == 'disagree' || status == null) && city == null) {
                   SystemNavigator.pop();
                 }
                 Navigator.pop(context);
@@ -115,13 +123,21 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderRadius: BorderRadius.circular(24),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
-                child: Text(
-                  'Add current location',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                    color: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 8,
+                ),
+                child: InkWell(
+                  onTap: () {
+
+                  },
+                  child: Text(
+                    'Add current location',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -137,7 +153,6 @@ class _SearchScreenState extends State<SearchScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 12),
-
               if (isLoading)
                 const CircularProgressIndicator(color: Colors.white),
               if (suggestions.isEmpty && isLoading == false)
@@ -172,9 +187,23 @@ class _SearchScreenState extends State<SearchScreen> {
                         '${model.region}, ${model.country}',
                         style: const TextStyle(color: Colors.white54),
                       ),
-                      onTap: () {
+                      onTap: () async {
                         controller.text = model.name!;
-                        Navigator.pop(context, model.name);
+                        final prefs = await SharedPreferences.getInstance();
+                        final city = prefs.getString('city');
+                        if (city == null) {
+                          final bloc = context.read<HomeBloc>();
+                          bloc.add(SaveCityEvent(model.name!));
+                          bloc.add(CityWeatherEvent());
+                          bloc.add(CityForecastEvent());
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
+                        } else {
+                          Navigator.pop(context, model.name);
+                        }
                       },
                     );
                   },

@@ -1,16 +1,22 @@
-import 'package:weather_app/features/home/data/models/current_weather.dart';
+import 'package:weather_app/features/home/domain/entities/clouds_entity.dart';
+import 'package:weather_app/features/home/domain/entities/coord_entity.dart';
+import 'package:weather_app/features/home/domain/entities/main_entity.dart';
+import 'package:weather_app/features/home/domain/entities/rain_entity.dart';
+import 'package:weather_app/features/home/domain/entities/sys_entity.dart';
+import 'package:weather_app/features/home/domain/entities/weather_entity.dart';
+import 'package:weather_app/features/home/domain/entities/wind_entity.dart';
 
 class CurrentWeatherEntity {
-  final Coord coord;
+  final CoordEntity coord;
   final List<WeatherEntity> weather;
   final String base;
-  final Main main;
+  final MainEntity main;
   final int visibility;
-  final Wind wind;
-  final Rain? rain;
-  final Clouds clouds;
+  final WindEntity wind;
+  final RainEntity? rain;
+  final CloudsEntity clouds;
   final int dt;
-  final Sys sys;
+  final SysEntity sys;
   final int timezone;
   final int id;
   final String name;
@@ -31,20 +37,5 @@ class CurrentWeatherEntity {
     required this.id,
     required this.name,
     required this.cod,
-  });
-}
-
-
-class WeatherEntity{
-  final int id;
-  final String main;
-  final String description;
-  final String icon;
-
-  WeatherEntity({
-    required this.id,
-    required this.main,
-    required this.description,
-    required this.icon,
   });
 }

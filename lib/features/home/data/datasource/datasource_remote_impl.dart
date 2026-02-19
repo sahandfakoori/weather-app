@@ -1,10 +1,10 @@
 import 'package:weather_app/features/home/data/datasource/api_service.dart';
-import 'package:weather_app/features/home/data/datasource/datasource_remote.dart';
-import 'package:weather_app/features/home/data/models/current_weather.dart';
+import 'package:weather_app/features/home/data/datasource/datasource.dart';
+import 'package:weather_app/features/home/data/models/current_weather_model.dart';
 import 'package:weather_app/features/home/data/models/forecast_weather_model.dart';
 import 'package:weather_app/features/home/data/models/suggest_city_model.dart';
 
-class DatasourceRemoteImpl extends DatasourceRemote {
+class DatasourceRemoteImpl extends Datasource {
   final ApiService apiService;
 
   DatasourceRemoteImpl(this.apiService);
@@ -15,7 +15,7 @@ class DatasourceRemoteImpl extends DatasourceRemote {
     if (response.statusCode == 200) {
       return CurrentWeatherModel.fromJson(response.data);
     } else {
-      throw Exception('error can not get current weather');
+      throw Exception('error can not get current_weather');
     }
   }
 
@@ -25,7 +25,7 @@ class DatasourceRemoteImpl extends DatasourceRemote {
     if (response.statusCode == 200) {
       return ForecastWeatherModel.fromJson(response.data);
     } else {
-      throw Exception('error can not get forecast weather');
+      throw Exception('error can not get forecast_weather');
     }
   }
 
@@ -35,7 +35,7 @@ class DatasourceRemoteImpl extends DatasourceRemote {
     if (response.statusCode == 200) {
       return SuggestCityModel.fromJson(response.data);
     } else {
-      throw Exception('error can not get forecast weather');
+      throw Exception('error can not get forecast_weather');
     }
   }
 }

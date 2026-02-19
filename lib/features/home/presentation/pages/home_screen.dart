@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart' hide NavigationDrawer;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weather_app/core/utils/location_service.dart';
-import 'package:weather_app/core/utils/use_current_location.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_event.dart';
 import 'package:weather_app/features/home/presentation/widgets/app_bar_sliver.dart';
@@ -19,44 +16,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _controller = ScrollController();
-  late String cityName = 'Tehran';
-  String city = 'Loading...';
 
   @override
   void initState() {
     super.initState();
-
-    initApp();
-
-
+    // initApp();
   }
 
 
-  Future<void> initApp() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (!mounted) return;
-    final status = prefs.getString('currentLocation');
-
-    if(status == null || status == 'disagree') {
-      await useCurrentLocation(context);
-    }
-    if (!mounted) return;
-
-    if(status == 'agree') {
-      await determinePosition(context);
-    }
-  }
-
-
-
-
-
-
-
-
-
-
-
+  // Future<void> initApp() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   if (!mounted) return;
+  //   final status = prefs.getString('currentLocation');
+  //
+  //   if(status == null || status == 'disagree') {
+  //     await useCurrentLocation(context);
+  //   }
+  //   if (!mounted) return;
+  //
+  //   if(status == 'agree') {
+  //     await determinePosition(context);
+  //   }
+  // }
 
 
 
@@ -127,13 +108,13 @@ class _HomeScreenState extends State<HomeScreen> {
   //   }
   // }
 
-  Future<void> _loadCity() async {
-    final prefs = await SharedPreferences.getInstance();
-    final storedCity = prefs.getString('city') ?? 'Qazvin';
-    setState(() {
-      city = storedCity;
-    });
-  }
+  // Future<void> _loadCity() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final storedCity = prefs.getString('city') ?? 'Qazvin';
+  //   setState(() {
+  //     city = storedCity;
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -153,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: CustomScrollView(
           controller: _controller,
           slivers: [
-            AppBarSliver(controller: _controller, cityName: city),
+            AppBarSliver(controller: _controller),
             DailyWeatherBox(),
             DailyDetailBox(),
           ],

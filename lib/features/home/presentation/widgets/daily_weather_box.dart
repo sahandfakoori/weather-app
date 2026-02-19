@@ -1,16 +1,32 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/features/home/domain/entities/current_weather_entity.dart';
 import 'package:weather_app/features/home/domain/entities/forecast_weather_entity.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:weather_app/features/home/presentation/bloc/home_event.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_state.dart';
 import 'package:weather_app/features/home/presentation/util/formatter.dart';
 import 'package:weather_app/features/home/presentation/widgets/skeleton/current_weather_skeleton.dart';
 import 'package:weather_app/features/home/presentation/widgets/skeleton/forecast_weather_skeleton.dart';
 
-class DailyWeatherBox extends StatelessWidget {
+class DailyWeatherBox extends StatefulWidget {
   const DailyWeatherBox({super.key});
+
+  @override
+  State<DailyWeatherBox> createState() => _DailyWeatherBoxState();
+}
+
+class _DailyWeatherBoxState extends State<DailyWeatherBox> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // context.read<HomeBloc>().add(CityWeatherEvent());
+    // context.read<HomeBloc>().add(CityForecastEvent());
+    context.read<HomeBloc>().add(LoadCityWeatherEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +35,7 @@ class DailyWeatherBox extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: Container(
           padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            // border: BoxBorder.all(color: Colors.white, width: 1),
-            borderRadius: BorderRadius.circular(24),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(24)),
           child: Column(
             children: [
               BlocBuilder<HomeBloc, HomeState>(
@@ -75,9 +88,20 @@ class DailyWeatherBox extends StatelessWidget {
                         Row(
                           children: [
                             Image.network(
-                              'http://openweathermap.org/img/wn/${currentWeatherEntity.weather[0].icon.toString()}@2x.png',
+                              'https://openweathermap.org/img/wn/${currentWeatherEntity.weather[0].icon.toString()}@2x.png',
                               width: 86,
                               height: 86,
+                              errorBuilder: (context, error, stackTrace) {
+                                return
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Image.asset(
+                                    'assets/icons/weather.webp' ,
+                                    width: 76,
+                                    height: 76,
+                                                                    ),
+                                  );
+                              },
                             ),
                             Text(
                               '${currentWeatherEntity.main.temp.round().toString()}°',
@@ -131,7 +155,7 @@ class DailyWeatherBox extends StatelessWidget {
                     return const ForecastWeatherSkeleton();
                   }
                   // success
-                  if (state.current != null) {
+                  if (state.forecast != null) {
                     final ForecastWeatherEntity forecastWeatherEntity =
                         state.forecast!;
                     state.current!;
@@ -143,18 +167,30 @@ class DailyWeatherBox extends StatelessWidget {
                           return Column(
                             children: [
                               Text(
-                                forecastWeatherEntity.list[index].formattedTime,
+                                formattedTime(
+                                  forecastWeatherEntity.list[index].dt,
+                                ),
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey,
                                 ),
                               ),
+
                               Image.network(
-                                'http://openweathermap.org/img/wn/${forecastWeatherEntity.list[index].weather[0].icon.toString()}@2x.png',
+                                'https://openweathermap.org/img/wn/${forecastWeatherEntity.list[index].weather[0].icon}@2x.png',
                                 width: 40,
                                 height: 40,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    'assets/icons/weather.webp' ,
+                                    width: 40,
+                                    height: 40,
+                                  );
+                                },
                               ),
+
+
                               Text(
                                 '${forecastWeatherEntity.list[index].main.temp.round().toString()}°',
                                 style: TextStyle(
@@ -210,5 +246,13 @@ class DailyWeatherBox extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String formattedTime(int dt) {
+    final date = DateTime.fromMillisecondsSinceEpoch(
+      dt * 1000,
+      isUtc: true,
+    ).toLocal();
+    return DateFormat('HH:mm').format(date);
   }
 }

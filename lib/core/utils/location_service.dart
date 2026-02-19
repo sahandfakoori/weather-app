@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Determine the current position of the device.
 ///
@@ -34,7 +33,7 @@ Future<Position?> determinePosition(BuildContext context) async {
                       'To continue, your device will need to use Location Accuracy',
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: .w500,
+                        fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
                       maxLines: 2,
