@@ -79,12 +79,12 @@ dependencies:
 ## **Screenshots**
 *Add your screenshots here*
 
-- ![Current Weather](Images/HomeScreen.jpg)  
-- ![Drawer Menu](Images/DrawerMenu.jpg)  
-- ![Manage Screen](Images/ManageScreen.jpg)  
-- ![Search](Images/Search.jpg)
-- ![Search Screen](Images/SearchScreen.jpg)
-- ![Skeletone](Images/Skeletone.jpg)
+- ![Current Weather](assets/images/HomeScreen.jpg)  
+- ![Drawer Menu](assets/images/DrawerMenu.jpg)  
+- ![Manage Screen](assets/images/ManageScreen.jpg)  
+- ![Search](assets/images/Search.jpg)
+- ![Search Screen](assets/images/SearchScreen.jpg)
+- ![Skeletone](assets/images/Skeletone.jpg)
 
 
 ---
