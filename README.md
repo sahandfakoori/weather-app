@@ -79,12 +79,16 @@ dependencies:
 ## **Screenshots**
 *Add your screenshots here*
 
-- ![Current Weather](assets/images/HomeScreen.jpg)  
-- ![Drawer Menu](assets/images/DrawerMenu.jpg)  
-- ![Manage Screen](assets/images/ManageScreen.jpg)  
-- ![Search](assets/images/Search.jpg)
-- ![Search Screen](assets/images/SearchScreen.jpg)
-- ![Skeletone](assets/images/Skeletone.jpg)
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+
+<img src="assets/images/HomeScreen.jpg" alt="Current Weather" width="200"/>
+<img src="assets/images/DrawerMenu.jpg" alt="Drawer Menu" width="200"/>
+<img src="assets/images/ManageScreen.jpg" alt="Manage Screen" width="200"/>
+<img src="assets/images/Search.jpg" alt="Search" width="200"/>
+<img src="assets/images/SearchScreen.jpg" alt="Search Screen" width="200"/>
+<img src="assets/images/Skeletone.jpg" alt="Skeleton Loading" width="200"/>
+
+</div>
 
 
 ---
