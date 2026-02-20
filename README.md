@@ -1,23 +1,35 @@
-🌤 Weather App
+# 🌤 Weather App
 
-Current Location Weather: Ask for user permission and display the weather for their current location.
+![Flutter](https://img.shields.io/badge/Flutter-3.13-blue?logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-3.1-blue?logo=dart&logoColor=white)
+![Hive](https://img.shields.io/badge/Hive-2.2-orange?logo=hive&logoColor=white)
 
-City Search: Users can manually enter city names to get weather updates.
+## **Description**
+This project is a **Flutter-based weather application** that provides **current and forecasted weather** based on the user’s location or a manually entered city.  
 
-Offline Caching: Weather data is cached using Hive, so users can see previously loaded data even without internet.
+- Fetches **live data** when the device is online.  
+- Uses **Hive** for **offline caching**, so users can see previously loaded weather even without internet.  
+- **Skeletonizer** is used for **smooth loading placeholders**.  
+- Users can **save favourite locations** and quickly access them from a **drawer menu**.  
+- Handles **location permissions** gracefully and stores user preferences using **SharedPreferences**.
 
-Favourite Locations: Users can save their current location as favourite and quickly access it.
+---
 
-Drawer Navigation: Easily switch between saved cities and refresh their weather.
+## **Features**
+- **Current Location Weather**: Requests user permission and displays weather based on GPS coordinates.  
+- **City Search**: Users can manually search for any city and get current and forecast weather.  
+- **Offline Caching**: Saves data locally using **Hive**, allowing access without internet.  
+- **Favourite Locations**: Save current location as favourite for quick access on app launch.  
+- **Drawer Navigation**: Switch between saved cities, refresh data, and manage locations.  
+- **Skeleton Screens**: Smooth loading placeholders for **current weather** and **hourly forecasts** using **Skeletonizer**.  
+- **Real-Time Updates**: Fetches live data via **Dio** from OpenWeatherMap API.  
+- **Persistent Storage**: Stores user preferences, selected cities, and location consent using **SharedPreferences**.  
+- **Permissions Handling**: Works with **permission_handler** to request location access safely.
 
-Skeleton Screens: Smooth loading placeholders using Skeletonizer.
+---
 
-Real-Time Updates: Uses Dio to fetch data from OpenWeatherMap API (or any weather API you integrate).
-
-Persistent Storage: User preferences (like city name and current location consent) are saved using SharedPreferences.
-
-Permissions Handling: Works with permission_handler to safely request location permissions.
-
+## **Dependencies**
+```yaml
 dependencies:
   dio: ^5.9.0
   permission_handler: ^12.0.1
@@ -35,49 +47,3 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   skeletonizer: ^2.1.3
-
-  Key Implementation Details
-
-Hive for Offline Storage
-
-Caches both current weather and forecast.
-
-Stores favourite locations for quick access.
-
-Uses WeatherDataModel as the main Hive object.
-
-Bloc State Management
-
-Handles async fetching and caching seamlessly.
-
-HomeBloc manages current weather, forecast, saved cities, and loading states.
-
-Location Handling
-
-Requests permission from user.
-
-Saves consent in SharedPreferences (agree or disagree).
-
-Uses geolocator to determine current GPS coordinates.
-
-Search and Suggestions
-
-Debounced search input.
-
-Suggests cities using API.
-
-Stores selected city and fetches current weather and forecast.
-
-Skeleton Loading
-
-Smooth placeholders for current weather and hourly forecasts.
-
-Improves user experience during API calls.
-
-git clone https://github.com/sahandfakoori/weather_app.git
-cd weather_app
-
-flutter pub get
-flutter packages pub run build_runner build --delete-conflicting-outputs
-flutter run
-
