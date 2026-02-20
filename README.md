@@ -47,3 +47,47 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   skeletonizer: ^2.1.3
+```
+
+## **Key Implementation Details**
+
+### **Hive for Offline Storage**
+- Caches **current weather** and **forecast data**.  
+- Stores **favourite locations** for quick access.  
+- Uses `WeatherDataModel` as the main **Hive object**.
+
+### **Bloc State Management**
+- Handles **asynchronous fetching** and **caching** seamlessly.  
+- `HomeBloc` manages **current weather**, **forecast**, **saved cities**, and **loading states**.
+
+### **Location Handling**
+- Requests **user permission** before accessing location.  
+- Stores consent in **SharedPreferences** (`agree` or `disagree`).  
+- Uses **geolocator** to determine **GPS coordinates** for current location weather.
+
+### **Search and Suggestions**
+- Debounced **search input** to reduce API calls.  
+- Suggests cities using **API**.  
+- Stores selected city and fetches **current weather** and **forecast**.
+
+### **Skeleton Loading**
+- Smooth placeholders for **current weather** and **hourly forecasts**.  
+- Improves **user experience** during API calls.
+
+---
+
+## **Screenshots**
+*Add your screenshots here*
+
+- ![Current Weather](Images/current_weather.png)  
+- ![Forecast](Images/forecast.png)  
+- ![Drawer Menu](Images/drawer_menu.png)  
+- ![Skeleton Loading](Images/skeleton.png)
+
+---
+
+## **Hardware / Software Requirements**
+- **Device**: Any Android or iOS device/emulator with location services.  
+- **Software**: Flutter SDK, Dart 3+, VS Code / Android Studio.  
+- **API**: OpenWeatherMap API (or any compatible weather API).  
+- **Internet**: Required for live updates; cached data available offline.
