@@ -17,14 +17,6 @@ Future<void> getitInitial() async {
   //repository
   locator.registerSingleton<HomeRepository>(HomeRepositoryImpl(locator()));
 
-  //usecase
-  // locator.registerSingleton<GetCurrentWeatherUsecase>(
-  //   GetCurrentWeatherUsecase(locator()),
-  // );
-  // locator.registerSingleton<GetForecastWeather>(GetForecastWeather(locator()));
-
-
-
   //bloc
   locator.registerFactory<HomeBloc>(() => HomeBloc(locator<HomeRepository>()));
 }

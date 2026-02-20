@@ -15,7 +15,6 @@ class NavigationDrawer extends StatefulWidget {
 class _NavigationDrawerState extends State<NavigationDrawer> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<HomeBloc>().add(LoadSavedCitiesEvent());
   }
@@ -59,7 +58,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(width: 4,),
+                  const SizedBox(width: 4),
                   const Icon(
                     Icons.location_off_rounded,
                     color: Colors.white,
@@ -123,6 +122,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               ),
             ],
           ),
+
           BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
               if (state.savedCities.isEmpty) {
@@ -132,48 +132,53 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 );
               }
 
-              return Column(
-                children: state.savedCities.map((city) {
-                  return ListTile(
-                    title: Text(
-                      city.current?.name ?? '',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      '${city.current?.main.temp.round()}°',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    leading: Image.network(
-                      'https://openweathermap.org/img/wn/${city.current?.weather[0].icon}@2x.png',
-                      width: 40,
-                      height: 40,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Image.asset(
-                            'assets/icons/weather.webp',
-                            width: 40,
-                            height: 40,
-                          ),
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: state.savedCities.length,
+                  itemBuilder: (context, index) {
+                    final city = state.savedCities[index];
+
+                    return ListTile(
+                      title: Text(
+                        city.current?.name ?? '',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        '${city.current?.main.temp.round()}°',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      leading: Image.network(
+                        'https://openweathermap.org/img/wn/${city.current?.weather[0].icon}@2x.png',
+                        width: 40,
+                        height: 40,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: Image.asset(
+                              'assets/icons/weather.webp',
+                              width: 40,
+                              height: 40,
+                            ),
+                          );
+                        },
+                      ),
+                      onTap: () {
+                        context.read<HomeBloc>().add(
+                          SaveCityEvent(city.current!.name),
                         );
+
+                        context.read<HomeBloc>().add(LoadCityWeatherEvent());
+
+                        Navigator.pop(context);
                       },
-                    ),
-                    onTap: () {
-                      context.read<HomeBloc>().add(
-                        SaveCityEvent(city.current!.name),
-                      );
-
-                      context.read<HomeBloc>().add(LoadCityWeatherEvent());
-
-                      Navigator.pop(context);
-                    },
-                  );
-                }).toList(),
+                    );
+                  },
+                ),
               );
             },
           ),
-
-          // Text('No more', style: TextStyle(fontSize: 14, color: Colors.white)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Color(0xff515151)),
             onPressed: () {

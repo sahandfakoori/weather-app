@@ -20,10 +20,7 @@ class DailyWeatherBox extends StatefulWidget {
 class _DailyWeatherBoxState extends State<DailyWeatherBox> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // context.read<HomeBloc>().add(CityWeatherEvent());
-    // context.read<HomeBloc>().add(CityForecastEvent());
     context.read<HomeBloc>().add(LoadCityWeatherEvent());
   }
 
@@ -91,15 +88,16 @@ class _DailyWeatherBoxState extends State<DailyWeatherBox> {
                               width: 86,
                               height: 86,
                               errorBuilder: (context, error, stackTrace) {
-                                return
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Image.asset(
-                                    'assets/icons/weather.webp' ,
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/icons/weather.webp',
                                     width: 76,
                                     height: 76,
-                                                                    ),
-                                  );
+                                  ),
+                                );
                               },
                             ),
                             Text(
@@ -162,7 +160,8 @@ class _DailyWeatherBoxState extends State<DailyWeatherBox> {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          final weather = forecastWeatherEntity.list[index].weather;
+                          final weather =
+                              forecastWeatherEntity.list[index].weather;
                           final icon = weather.isNotEmpty
                               ? weather[0].icon
                               : '01d';
@@ -185,13 +184,12 @@ class _DailyWeatherBoxState extends State<DailyWeatherBox> {
                                 height: 40,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset(
-                                    'assets/icons/weather.webp' ,
+                                    'assets/icons/weather.webp',
                                     width: 40,
                                     height: 40,
                                   );
                                 },
                               ),
-
 
                               Text(
                                 '${forecastWeatherEntity.list[index].main.temp.round().toString()}°',

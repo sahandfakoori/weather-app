@@ -6,13 +6,11 @@ import 'package:weather_app/features/home/domain/entities/forecast_weather_entit
 import 'package:weather_app/features/home/domain/repository/home_repository.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_event.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_state.dart';
+import 'package:weather_app/features/home/presentation/pages/search_screen.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  // final GetCurrentWeatherUsecase getCurrentWeather;
-  // final GetForecastWeather getForecastWeather;
   final HomeRepository homeRepository;
 
-  // HomeBloc(this.getCurrentWeather, this.getForecastWeather)
   HomeBloc(this.homeRepository) : super(HomeState()) {
     on<LoadCityWeatherEvent>(_onLoadCityWeather);
     on<CityWeatherEvent>(_onCurrentCityWeather);
@@ -27,12 +25,27 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     emit(state.copyWith(isLoadingCurrent: true, isLoadingForecast: true));
-    final DataState<CurrentWeatherEntity> current = await homeRepository
-        .getWeatherCurrentLocation(event.lat, event.lon);
-    final DataState<ForecastWeatherEntity> forecast = await homeRepository
-        .getForecastCurrentLocation(event.lat, event.lon);
+
+    final current = await homeRepository.getWeatherCurrentLocation(
+      event.lat,
+      event.lon,
+    );
+
+    final forecast = await homeRepository.getForecastCurrentLocation(
+      event.lat,
+      event.lon,
+    );
+
     if (current is DataSuccess<CurrentWeatherEntity> &&
         forecast is DataSuccess<ForecastWeatherEntity>) {
+      final rawCity = current.data.name;
+
+      final cleanCity = normalizeCity(rawCity);
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('city', cleanCity);
+      await prefs.setString('currentLocation', 'agree');
+
       emit(
         state.copyWith(
           current: current.data,
@@ -42,11 +55,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           error: null,
         ),
       );
-    } else if (current is DataFailed<CurrentWeatherEntity> &&
-        forecast is DataFailed<ForecastWeatherEntity>) {
+    } else {
       emit(
         state.copyWith(
-          error: current.message ?? 'Something went wrong',
+          error: 'Location error',
           isLoadingCurrent: false,
           isLoadingForecast: false,
         ),
@@ -67,12 +79,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     LoadCityWeatherEvent event,
     Emitter<HomeState> emit,
   ) async {
-    // همزمان loading هر دو رو true کن
     emit(state.copyWith(isLoadingCurrent: true, isLoadingForecast: true));
-
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? city = prefs.getString('city');
-
     if (city == null) {
       emit(
         state.copyWith(

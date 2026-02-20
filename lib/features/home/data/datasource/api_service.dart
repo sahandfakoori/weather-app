@@ -32,20 +32,26 @@ class ApiService {
   Future<dynamic> currentWeatherLocation(double lat, double lon) async {
     final response = await _dio.get(
       '${Constants.baseUrl}/weather',
-      queryParameters: {'lat': lat,'lon': lon, 'appid': apiKey, 'units': 'metric'},
+      queryParameters: {
+        'lat': lat,
+        'lon': lon,
+        'appid': apiKey,
+        'units': 'metric',
+      },
     );
-    print(response.data);
     return response;
   }
 
   Future<dynamic> currentForecastLocation(double lat, double lon) async {
     final response = await _dio.get(
       '${Constants.baseUrl}/forecast',
-      queryParameters: {'lat': lat,'lon': lon, 'appid': apiKey, 'units': 'metric'},
+      queryParameters: {
+        'lat': lat,
+        'lon': lon,
+        'appid': apiKey,
+        'units': 'metric',
+      },
     );
-    print(response.data);
-
     return response;
   }
-
 }

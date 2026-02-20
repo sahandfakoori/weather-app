@@ -21,6 +21,13 @@ class SearchScreen extends StatefulWidget {
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
+String normalizeCity(String name) {
+  return name
+      .replaceAll(RegExp(r'\bcounty\b', caseSensitive: false), '')
+      .replaceAll(',', '')
+      .trim();
+}
+
 class _SearchScreenState extends State<SearchScreen>
     with WidgetsBindingObserver {
   final TextEditingController controller = TextEditingController();
@@ -73,12 +80,9 @@ class _SearchScreenState extends State<SearchScreen>
       final pos = await determinePosition(context);
 
       if (pos != null && mounted) {
-        // Dispatch به Bloc برای گرفتن هوا
         context.read<HomeBloc>().add(
           CurrentLocation(pos.latitude, pos.longitude),
         );
-
-        // گرفتن اسم شهر از currentWeather
         final currentWeather = await homeRepository.getWeatherCurrentLocation(
           pos.latitude,
           pos.longitude,
@@ -88,14 +92,12 @@ class _SearchScreenState extends State<SearchScreen>
         lat.setDouble('lon', pos.longitude);
 
         if (currentWeather is DataSuccess<CurrentWeatherEntity>) {
-          final cityName =
-              currentWeather.data.name;
+          final cityName = currentWeather.data.name;
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('city', cityName);
           await prefs.setString('currentLocation', 'agree');
         } else if (currentWeather is DataFailed<CurrentWeatherEntity>) {
-          // میتونی fallback بزنی
-          print('Error getting city name: ${currentWeather.message}');
+          debugPrint('Error getting city name: ${currentWeather.message}');
         }
         if (!mounted) return;
 
@@ -264,9 +266,10 @@ class _SearchScreenState extends State<SearchScreen>
                         controller.text = model.name!;
                         final prefs = await SharedPreferences.getInstance();
                         final city = prefs.getString('city');
+                        final cleanName = normalizeCity(model.name!);
                         if (city == null) {
                           final bloc = context.read<HomeBloc>();
-                          bloc.add(SaveCityEvent(model.name!));
+                          bloc.add(SaveCityEvent(cleanName));
                           bloc.add(CityWeatherEvent());
                           bloc.add(CityForecastEvent());
                           Navigator.of(context).pushReplacement(
@@ -275,7 +278,7 @@ class _SearchScreenState extends State<SearchScreen>
                             ),
                           );
                         } else {
-                          Navigator.pop(context, model.name);
+                          Navigator.pop(context, cleanName);
                         }
                       },
                     );
