@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_app/core/resources/data_state.dart';
 import 'package:weather_app/core/utils/location_service.dart';
 import 'package:weather_app/core/utils/use_current_location.dart';
 import 'package:weather_app/features/home/data/models/suggest_city_model.dart';
+import 'package:weather_app/features/home/domain/entities/current_weather_entity.dart';
 import 'package:weather_app/features/home/domain/repository/home_repository.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_event.dart';
@@ -19,17 +21,20 @@ class SearchScreen extends StatefulWidget {
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends State<SearchScreen>
+    with WidgetsBindingObserver {
   final TextEditingController controller = TextEditingController();
   final HomeRepository homeRepository = locator();
   List<Data> suggestions = [];
   bool isLoading = false;
-
   Timer? _debounce;
+  double? lat;
+  double? lon;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initApp();
     });
@@ -47,7 +52,60 @@ class _SearchScreenState extends State<SearchScreen> {
     if (!mounted) return;
 
     if (status == 'agree') {
-      await determinePosition(context);
+      final pos = await determinePosition(context);
+      final currentLocation = await SharedPreferences.getInstance();
+      if (pos != null) {
+        setState(() {
+          lat = pos.latitude;
+          lon = pos.longitude;
+          currentLocation.setDouble('lat', pos.latitude);
+          currentLocation.setDouble('lon', pos.longitude);
+        });
+
+        context.read<HomeBloc>().add(CurrentLocation(lat!, lon!));
+      }
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      final pos = await determinePosition(context);
+
+      if (pos != null && mounted) {
+        // Dispatch به Bloc برای گرفتن هوا
+        context.read<HomeBloc>().add(
+          CurrentLocation(pos.latitude, pos.longitude),
+        );
+
+        // گرفتن اسم شهر از currentWeather
+        final currentWeather = await homeRepository.getWeatherCurrentLocation(
+          pos.latitude,
+          pos.longitude,
+        );
+        final lat = await SharedPreferences.getInstance();
+        lat.setDouble('lat', pos.latitude);
+        lat.setDouble('lon', pos.longitude);
+
+        if (currentWeather is DataSuccess<CurrentWeatherEntity>) {
+          final cityName =
+              currentWeather.data.name;
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('city', cityName);
+          await prefs.setString('currentLocation', 'agree');
+        } else if (currentWeather is DataFailed<CurrentWeatherEntity>) {
+          // میتونی fallback بزنی
+          print('Error getting city name: ${currentWeather.message}');
+        }
+        if (!mounted) return;
+
+        if (ModalRoute.of(context)?.isCurrent ?? false) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => HomeScreen()),
+          );
+        }
+      }
     }
   }
 
@@ -70,6 +128,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
   }
@@ -128,8 +187,22 @@ class _SearchScreenState extends State<SearchScreen> {
                   vertical: 8,
                 ),
                 child: InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    final pos = await determinePosition(context);
 
+                    if (pos != null && mounted) {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setString('currentLocation', 'agree');
+
+                      context.read<HomeBloc>().add(
+                        CurrentLocation(pos.latitude, pos.longitude),
+                      );
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => HomeScreen()),
+                      );
+                    }
                   },
                   child: Text(
                     'Add current location',

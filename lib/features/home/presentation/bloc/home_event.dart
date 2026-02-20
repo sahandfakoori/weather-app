@@ -6,20 +6,27 @@ class CityWeatherEvent extends HomeEvent {
   CityWeatherEvent();
 }
 
-
-class CityForecastEvent extends HomeEvent{
+class CityForecastEvent extends HomeEvent {
   // final String city;
 
   CityForecastEvent();
 }
 
-class SaveCityEvent extends HomeEvent{
+class SaveCityEvent extends HomeEvent {
   final String city;
 
   SaveCityEvent(this.city);
 }
-class LoadCityWeatherEvent extends HomeEvent {
 
+class LoadCityWeatherEvent extends HomeEvent {
   LoadCityWeatherEvent();
 }
 
+class LoadSavedCitiesEvent extends HomeEvent {}
+
+class CurrentLocation extends HomeEvent {
+  final double lat;
+  final double lon;
+
+  CurrentLocation(this.lat, this.lon);
+}

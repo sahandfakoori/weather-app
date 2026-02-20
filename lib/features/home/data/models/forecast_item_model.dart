@@ -48,18 +48,16 @@ class ForecastItemModel {
     return ForecastItemModel(
       dt: json['dt'],
       main: MainModel.fromJson(json['main']),
-      weather: (json['weather'] as List)
+      weather: (json['weather'] as List? ?? [])
           .map((e) => WeatherModel.fromJson(e))
           .toList(),
       clouds: CloudsModel.fromJson(json['clouds']),
       wind: WindModel.fromJson(json['wind']),
       visibility: json['visibility'],
-      pop: (json['pop'] as num).toDouble(),
+      pop: (json['pop'] as num?)?.toDouble() ?? 0.0,
       rain: json['rain'] != null ? RainModel.fromJson(json['rain']) : null,
       sys: ForecastSysModel.fromJson(json['sys']),
       dtTxt: json['dt_txt'],
     );
   }
-
-
 }

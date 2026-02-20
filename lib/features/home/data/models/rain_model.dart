@@ -12,7 +12,10 @@ class RainModel {
 
   factory RainModel.fromJson(Map<String, dynamic> json) =>
       RainModel(
-        h1: (json['1h'] as num).toDouble(),
+        // h1: (json['1h'] as num).toDouble(),
+        h1: (json['1h'] as num?)?.toDouble()
+            ?? (json['3h'] as num?)?.toDouble()
+            ?? 0.0,
       );
 
   Map<String, dynamic> toJson() =>

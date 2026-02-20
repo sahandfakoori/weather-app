@@ -60,8 +60,6 @@ Future<void> initHive() async {
 
   /// -------- Open Box --------
   await Hive.openBox<WeatherDataModel>('weather');
-  await Hive.openBox<CurrentWeatherModel>('current_weather');
-  await Hive.openBox<ForecastWeatherModel>('forecast_weather');
 }
 
 class MyApp extends StatelessWidget {

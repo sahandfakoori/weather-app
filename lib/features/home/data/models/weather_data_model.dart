@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:weather_app/features/home/data/models/current_weather_model.dart';
 import 'package:weather_app/features/home/data/models/forecast_weather_model.dart';
+
 part 'weather_data_model.g.dart';
 
 @HiveType(typeId: 50)
@@ -14,11 +15,7 @@ class WeatherDataModel extends HiveObject {
   @HiveField(2)
   final bool? isFavourite;
 
-  WeatherDataModel({
-    this.current,
-    this.forecast,
-    this.isFavourite,
-  });
+  WeatherDataModel({this.current, this.forecast, this.isFavourite});
 
   WeatherDataModel copyWith({
     CurrentWeatherModel? current,
@@ -29,5 +26,4 @@ class WeatherDataModel extends HiveObject {
       forecast: forecast ?? this.forecast,
     );
   }
-
 }

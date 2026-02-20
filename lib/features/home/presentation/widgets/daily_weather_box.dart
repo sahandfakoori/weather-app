@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -158,12 +157,15 @@ class _DailyWeatherBoxState extends State<DailyWeatherBox> {
                   if (state.forecast != null) {
                     final ForecastWeatherEntity forecastWeatherEntity =
                         state.forecast!;
-                    state.current!;
                     return SizedBox(
                       height: 110,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
+                          final weather = forecastWeatherEntity.list[index].weather;
+                          final icon = weather.isNotEmpty
+                              ? weather[0].icon
+                              : '01d';
                           return Column(
                             children: [
                               Text(
@@ -178,7 +180,7 @@ class _DailyWeatherBoxState extends State<DailyWeatherBox> {
                               ),
 
                               Image.network(
-                                'https://openweathermap.org/img/wn/${forecastWeatherEntity.list[index].weather[0].icon}@2x.png',
+                                'https://openweathermap.org/img/wn/$icon@2x.png',
                                 width: 40,
                                 height: 40,
                                 errorBuilder: (context, error, stackTrace) {
@@ -221,7 +223,7 @@ class _DailyWeatherBoxState extends State<DailyWeatherBox> {
                         },
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 24),
-                        itemCount: 8,
+                        itemCount: forecastWeatherEntity.list.length,
                       ),
                     );
                   } else {

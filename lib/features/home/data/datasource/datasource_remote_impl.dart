@@ -38,4 +38,25 @@ class DatasourceRemoteImpl extends Datasource {
       throw Exception('error can not get forecast_weather');
     }
   }
+
+  @override
+  Future<CurrentWeatherModel> getWeatherCurrentLocation(double lat, double lon
+      ) async{
+    final response = await apiService.currentWeatherLocation(lat, lon);
+    if (response.statusCode == 200) {
+      return CurrentWeatherModel.fromJson(response.data);
+    } else {
+      throw Exception('error can not get current_weather');
+    }
+  }
+
+  @override
+  Future<ForecastWeatherModel> getForecastCurrentLocation(double lat, double lon) async{
+    final response = await apiService.currentForecastLocation(lat, lon);
+    if (response.statusCode == 200) {
+      return ForecastWeatherModel.fromJson(response.data);
+    } else {
+      throw Exception('error can not get current_weather');
+    }
+  }
 }

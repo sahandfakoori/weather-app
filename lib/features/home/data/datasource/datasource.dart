@@ -7,4 +7,6 @@ abstract class Datasource {
   Future<CurrentWeatherModel> getCurrentWeather(String city);
   Future<ForecastWeatherModel> getCurrentForecast(String city);
   Future<SuggestCityModel> getSuggestPlace(String prefix);
+  Future<CurrentWeatherModel> getWeatherCurrentLocation(double lat , double lon);
+  Future<ForecastWeatherModel> getForecastCurrentLocation(double lat , double lon);
 }

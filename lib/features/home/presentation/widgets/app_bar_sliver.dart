@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/core/utils/location_service.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_event.dart';
 import 'package:weather_app/features/home/presentation/bloc/home_state.dart';
+import 'package:weather_app/features/home/presentation/pages/home_screen.dart';
 import 'package:weather_app/features/home/presentation/pages/search_screen.dart';
 
 class AppBarSliver extends StatefulWidget {
@@ -36,6 +38,21 @@ class _AppBarSliverState extends State<AppBarSliver> {
             IconButton(
               onPressed: () async {
                 await determinePosition(context);
+                final pos = await determinePosition(context);
+
+                if (pos != null && mounted) {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('currentLocation', 'agree');
+
+                  context.read<HomeBloc>().add(
+                    CurrentLocation(pos.latitude, pos.longitude),
+                  );
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => HomeScreen()),
+                  );
+                }
               },
               icon: Icon(
                 Icons.location_on_rounded,

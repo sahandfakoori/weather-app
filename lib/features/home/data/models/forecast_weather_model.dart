@@ -5,7 +5,7 @@ import 'package:weather_app/features/home/data/models/forecast_item_model.dart';
 part 'forecast_weather_model.g.dart';
 
 @HiveType(typeId: 20)
-class ForecastWeatherModel extends HiveObject{
+class ForecastWeatherModel extends HiveObject {
   @HiveField(0)
   final int cod;
   @HiveField(1)
@@ -27,9 +27,7 @@ class ForecastWeatherModel extends HiveObject{
 
   factory ForecastWeatherModel.fromJson(Map<String, dynamic> json) {
     return ForecastWeatherModel(
-      cod: json['cod'] is String
-          ? int.parse(json['cod'])
-          : json['cod'],
+      cod: json['cod'] is String ? int.parse(json['cod']) : json['cod'],
       message: json['message'],
       cnt: json['cnt'],
       list: (json['list'] as List)
@@ -145,4 +143,3 @@ class ForecastWeatherModel extends HiveObject{
 //     );
 //   }
 // } //
-

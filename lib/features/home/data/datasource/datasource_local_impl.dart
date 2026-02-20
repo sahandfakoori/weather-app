@@ -17,7 +17,7 @@ class DatasourceLocalImpl extends Datasource {
   }
 
   @override
-  Future<CurrentWeatherModel> getCurrentWeather(String city) async{
+  Future<CurrentWeatherModel> getCurrentWeather(String city) async {
     try {
       final box = Hive.box<CurrentWeatherModel>('weather');
       return box.get(city)!;
@@ -29,5 +29,23 @@ class DatasourceLocalImpl extends Datasource {
   @override
   Future<SuggestCityModel> getSuggestPlace(String prefix) {
     return throw Exception('turn on your internet');
+  }
+
+  @override
+  Future<ForecastWeatherModel> getForecastCurrentLocation(
+    double lat,
+    double lon,
+  ) {
+    // TODO: implement getForecastCurrentLocation
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<CurrentWeatherModel> getWeatherCurrentLocation(
+    double lat,
+    double lon,
+  )  {
+    // TODO: implement getWeatherCurrentLocation
+    throw UnimplementedError();
   }
 }
