@@ -89,8 +89,9 @@ dependencies:
 <img src="assets/images/Skeletone.jpg" alt="Skeleton Loading" width="200"/>
 
 </div>
-## Installation
-1. Clone the repository:
+
+## **Installation**
+- Clone the repository:
    ```bash
    git clone https://github.com/sahandfakoori/weather-app.git
 
