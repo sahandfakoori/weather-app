@@ -79,10 +79,13 @@ dependencies:
 ## **Screenshots**
 *Add your screenshots here*
 
-- ![Current Weather](Images/current_weather.png)  
-- ![Forecast](Images/forecast.png)  
-- ![Drawer Menu](Images/drawer_menu.png)  
-- ![Skeleton Loading](Images/skeleton.png)
+- ![Current Weather](Images/HomeScreen.jpg)  
+- ![Drawer Menu](Images/DrawerMenu.jpg)  
+- ![Manage Screen](Images/ManageScreen.jpg)  
+- ![Search](Images/Search.jpg)
+- ![Search Screen](Images/SearchScreen.jpg)
+- ![Skeletone](Images/Skeletone.jpg)
+
 
 ---
 
